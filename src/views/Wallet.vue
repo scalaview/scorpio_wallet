@@ -101,8 +101,8 @@ export default {
       this.error = false
       this.msg = 'Wallet create successfully!'
       this.empty = false
-      this.address = "dwfwagtgabfhijrjtgbfhawjjvfujhvxjhearbjgaohwfncbsehio"
-      this.privkey = 'dwefwagvavurijkjghuiarjhbjfrugihkjwergsdbfhbejfwnersvfbhiu'
+      this.privkey = this.$api.generatePrivateKey.call(this)
+      this.address = this.$api.getPublicFromWallet.call(this)
       this.isLoading = false
     },
     reset(){
@@ -111,8 +111,13 @@ export default {
     },
     sendTransaction(){
       this.isLoading = true
-      this.$api.getBalance.call(this).then(function(data){
-        console.log(data)
+      this.$api.getBalance.call(this, [this.address]).then(function(response){
+        if(response.body.err === 0){
+          this.balance = response.body.data.balance
+        }
+        this.isLoading = false
+      }, function(err){
+        console.log(err)
         this.isLoading = false
       })
     },

@@ -1,4 +1,4 @@
-var ec = require('elliptic');
+import ec from 'elliptic';
 var _ = require('lodash');
 // var request = require('request');
 var vue = require('vue');
@@ -16,6 +16,6 @@ export default {
     return key.getPublic().encode('hex');
   },
   getBalance(address){
-    return this.$http.get("http://localhost:5000/transaction_pool")
+    return this.$http.get("http://127.0.0.1:5000/balance/"+address)
   }
 }
