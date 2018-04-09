@@ -3,8 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import api from './api'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 
 Vue.config.productionTip = false
+Object.defineProperty(Vue.prototype, '$api', { value: api });
+
 
 /* eslint-disable no-new */
 new Vue({

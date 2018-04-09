@@ -86,7 +86,7 @@ export default {
       amount: 0.00,
       toaddress: "",
       isLoading: false,
-      inValidatAmount: true
+      inValidatAmount: false
     }
   },
   computed: {
@@ -111,6 +111,10 @@ export default {
     },
     sendTransaction(){
       this.isLoading = true
+      this.$api.getBalance.call(this).then(function(data){
+        console.log(data)
+        this.isLoading = false
+      })
     },
     validatAmount(){
       if(this.amount > this.balance){
