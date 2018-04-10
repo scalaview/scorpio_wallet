@@ -1,18 +1,19 @@
-import ec from 'elliptic';
-var _ = require('lodash');
-// var request = require('request');
-var vue = require('vue');
 
+import ec from 'elliptic'
+import lodash from 'lodash'
 
 export default {
+  install: function(Vue, name = '$api') {
+    Object.defineProperty(Vue.prototype, name, { value: axios });
+  },
   generatePrivateKey(){
-    const EC = new ec('secp256k1');
-    const keyPair = EC.genKeyPair();
+    debugger
+    const keyPair = this.$ec.genKeyPair();
     const privateKey = keyPair.getPrivate();
     return privateKey.toString(16);
   },
   getPublicFromWallet(privateKey) {
-    const key = EC.keyFromPrivate(privateKey, 'hex');
+    const key = this.$ec.keyFromPrivate(privateKey, 'hex');
     return key.getPublic().encode('hex');
   },
   getBalance(address){
