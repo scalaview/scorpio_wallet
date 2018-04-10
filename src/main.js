@@ -5,20 +5,15 @@ import App from './App'
 import router from './router'
 import api from './api'
 import VueResource from 'vue-resource'
-import ec from 'elliptic'
-import lodash from 'lodash'
 
 Vue.use(VueResource)
+Vue.use(api)
 Vue.config.productionTip = false
-Object.defineProperty(Vue.prototype, '$api', { value: api });
-Object.defineProperty(Vue.prototype, '$_', { value: lodash });
-// Object.defineProperty(Vue.prototype, '$ec', { value: (new ec('secp256k1')) });
 
 /* eslint-disable no-new */
-window.wallet = new Vue({
+new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>',
-  ec: ec
+  template: '<App/>'
 })

@@ -15,6 +15,8 @@
           <div class="column">
             Address: {{ address }}
           </div>
+        </div>
+        <div class="columns">
           <div class="column" v-if="privkey">
             Private Key (Remember to keep): {{ privkey }}
           </div>
@@ -101,8 +103,8 @@ export default {
       this.error = false
       this.msg = 'Wallet create successfully!'
       this.empty = false
-      this.privkey = this.$api.generatePrivateKey.call(this)
-      this.address = this.$api.getPublicFromWallet.call(this)
+      this.privkey = this.$generatePrivateKey()
+      this.address = this.$getPublicFromWallet(this.privkey)
       this.isLoading = false
     },
     reset(){
