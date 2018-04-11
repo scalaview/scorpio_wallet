@@ -34,9 +34,8 @@
         <div class="field">
           <label class="label">Address</label>
           <div class="control has-icons-left has-icons-right">
-            <input class="input is-success" type="text" placeholder="Address" v-model="toaddress">
+            <input class="input" type="text" placeholder="Address" v-model="receiverAddress">
           </div>
-          <p class="help is-success">This username is available</p>
         </div>
 
         <div class="field has-addons">
@@ -86,7 +85,7 @@ export default {
       privkey: '',
       balance: 0.00,
       amount: 0.00,
-      toaddress: "",
+      receiverAddress: "02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0",
       isLoading: false,
       inValidatAmount: false
     }
@@ -103,7 +102,7 @@ export default {
       this.error = false
       this.msg = 'Wallet create successfully!'
       this.empty = false
-      this.privkey = "2937f6419928952216a77efe5da87893711a6b6a9bd6353f0fd430d4fbb8c292"//this.$generatePrivateKey()
+      this.privkey = this.$generatePrivateKey()
       this.address = this.$getPublicFromWallet(this.privkey)
       this.$getBalance(this.address).then(function(response) {
         if(response.body.err === 0){
@@ -121,19 +120,15 @@ export default {
       this.amount = 0.00
     },
     sendTransaction(){
-      const $this = this
-      this.$unspentTransactionOutputs(this.address).then(function(response){
+      var $this = this
+      this.isLoading = true
+      this.$createTransaction(this.privkey, this.receiverAddress, parseFloat(this.amount)).then(function(response){
         if(response.body.err === 0){
-          const unspentTxOuts = response.body.data || []
-          $this.$getTransactionPool($this.address).then(function(response){
-            if(response.body.err === 0){
-              const txPool = response.body.data || []
-              $this.$createTransaction("02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0", $this.privkey, 1, unspentTxOuts, txPool).then(function(response){
-                console.log(response)
-              })
-            }
-          })
+          $this.msg = "transaction create successfully! tx id: " + response.body.data.id
         }
+        this.isLoading = false
+      }).catch(function(err){
+        this.isLoading = false
       })
     },
     validatAmount(){
