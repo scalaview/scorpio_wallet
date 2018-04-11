@@ -103,8 +103,17 @@ export default {
       this.error = false
       this.msg = 'Wallet create successfully!'
       this.empty = false
-      this.privkey = this.$generatePrivateKey()
+      this.privkey = "2937f6419928952216a77efe5da87893711a6b6a9bd6353f0fd430d4fbb8c292"//this.$generatePrivateKey()
       this.address = this.$getPublicFromWallet(this.privkey)
+      this.$getBalance(this.address).then(function(response) {
+        if(response.body.err === 0){
+          this.balance = response.body.data.balance
+        }
+        this.isLoading = false
+      }).catch(function(err){
+        console.log(err)
+        this.isLoading = false
+      })
       this.isLoading = false
     },
     reset(){
@@ -112,15 +121,19 @@ export default {
       this.amount = 0.00
     },
     sendTransaction(){
-      this.isLoading = true
-      this.$api.getBalance.call(this, [this.address]).then(function(response){
+      const $this = this
+      this.$unspentTransactionOutputs(this.address).then(function(response){
         if(response.body.err === 0){
-          this.balance = response.body.data.balance
+          const unspentTxOuts = response.body.data || []
+          $this.$getTransactionPool($this.address).then(function(response){
+            if(response.body.err === 0){
+              const txPool = response.body.data || []
+              $this.$createTransaction("02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0", $this.privkey, 1, unspentTxOuts, txPool).then(function(response){
+                console.log(response)
+              })
+            }
+          })
         }
-        this.isLoading = false
-      }, function(err){
-        console.log(err)
-        this.isLoading = false
       })
     },
     validatAmount(){
