@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="card" v-for="(item, index) in transactions">
+  <div v-if="transactions" class="card" v-for="(item, index) in transactions">
     <header class="card-header">
       <p class="card-header-title">
         Component
@@ -25,16 +25,20 @@ export default {
   },
   data () {
     return {
-      transactions: []
+      transactions: null,
+      address: null
     }
   },
   mounted() {
-    var $this = this
-    this.$getTransactionPool("02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0").then(function(response){
-      if(response.body.err === 0){
-          $this.transactions = response.body.data
-        }
-    })
+    this.address = this.$cookie.get('address')
+    if(this.address){
+      var $this = this
+      this.$getTransactionPool(this.address).then(function(response){
+        if(response.body.err === 0){
+            $this.transactions = response.body.data
+          }
+      })
+    }
   },
   computed: {
 

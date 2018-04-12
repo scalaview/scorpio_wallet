@@ -1,6 +1,18 @@
 <template>
   <div class="panel" v-if="isEmpty">
     <a class="button is-large" v-on:click.prevent.self="generate">Create Wallet App</a>
+    <br>
+    OR
+    <div class="field has-addons">
+      <div class="control">
+        <input class="input" v-model='importprivkey' type="text" placeholder="Private key">
+      </div>
+      <div class="control">
+        <a class="button is-info" v-on:click.prevent.self="importkey">
+          Import
+        </a>
+      </div>
+    </div>
   </div>
 
   <section class="hero is-primary" v-else-if="!isEmpty">
@@ -77,24 +89,38 @@ export default {
     Message
   },
   data () {
+    var importprivkey = this.$cookie.get('importprivkey'),
+        address = this.$cookie.get('address'),
+        empty = true
+    if (importprivkey && address){
+      empty = false
+    }
     return {
       msg: '',
       error: false,
-      empty: true,
-      address: '',
-      privkey: '',
+      empty: empty,
+      address: address,
+      privkey: null,
       balance: 0.00,
       amount: 0.00,
       receiverAddress: "02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0",
       isLoading: false,
-      inValidatAmount: false
+      inValidatAmount: false,
+      importprivkey: importprivkey
     }
   },
   computed: {
     isEmpty(){
-      return this.empty
+      if(this.address){
+        this.$getBalance(this.address).then(function(response) {
+          if(response.body.err === 0){
+            this.balance = response.body.data.balance
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      }
     },
-
   },
   methods: {
     generate(){
@@ -104,6 +130,8 @@ export default {
       this.empty = false
       this.privkey = this.$generatePrivateKey()
       this.address = this.$getPublicFromWallet(this.privkey)
+      this.$cookie.set('importprivkey', this.privkey, { expires: '6M' });
+      this.$cookie.set('address', this.address, { expires: '6M' });
       this.$getBalance(this.address).then(function(response) {
         if(response.body.err === 0){
           this.balance = response.body.data.balance
@@ -122,7 +150,7 @@ export default {
     sendTransaction(){
       var $this = this
       this.isLoading = true
-      this.$createTransaction(this.privkey, this.receiverAddress, parseFloat(this.amount)).then(function(response){
+      this.$createTransaction(this.importprivkey || this.privkey, this.receiverAddress, parseFloat(this.amount)).then(function(response){
         if(response.body.err === 0){
           $this.msg = "transaction create successfully! tx id: " + response.body.data.id
         }
@@ -137,6 +165,23 @@ export default {
       }else{
         this.inValidatAmount = false
       }
+    },
+    importkey(){
+      this.isLoading = true
+      this.address = this.$getPublicFromWallet(this.importprivkey)
+      this.$cookie.set('importprivkey', this.importprivkey, { expires: '6M' });
+      this.$cookie.set('address', this.address, { expires: '6M' });
+      this.$getBalance(this.address).then(function(response) {
+        if(response.body.err === 0){
+          this.balance = response.body.data.balance
+        }
+        this.isLoading = false
+      }).catch(function(err){
+        console.log(err)
+        this.isLoading = false
+      })
+      this.empty = false
+      this.isLoading = false
     }
   }
 }
