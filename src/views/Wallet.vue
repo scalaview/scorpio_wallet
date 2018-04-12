@@ -91,7 +91,7 @@ export default {
   data () {
     var importprivkey = this.$cookie.get('importprivkey'),
         address = this.$cookie.get('address'),
-        empty = true
+        empty = true;
     if (importprivkey && address){
       empty = false
     }
@@ -103,7 +103,7 @@ export default {
       privkey: null,
       balance: 0.00,
       amount: 0.00,
-      receiverAddress: "02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0",
+      receiverAddress: null,
       isLoading: false,
       inValidatAmount: false,
       importprivkey: importprivkey
@@ -111,16 +111,8 @@ export default {
   },
   computed: {
     isEmpty(){
-      if(this.address){
-        this.$getBalance(this.address).then(function(response) {
-          if(response.body.err === 0){
-            this.balance = response.body.data.balance
-          }
-        }).catch(function(err){
-          console.log(err)
-        })
-      }
-    },
+      return this.empty
+    }
   },
   methods: {
     generate(){
@@ -182,6 +174,17 @@ export default {
       })
       this.empty = false
       this.isLoading = false
+    }
+  },
+  beforeMount(){
+    if(this.address){
+      this.$getBalance(this.address).then(function(response) {
+        if(response.body.err === 0){
+          this.balance = response.body.data.balance
+        }
+      }).catch(function(err){
+        console.log(err)
+      })
     }
   }
 }

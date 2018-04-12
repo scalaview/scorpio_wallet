@@ -28,6 +28,9 @@
               <li>
                 <router-link to="/transactions">Transactions</router-link>
               </li>
+              <li>
+                <a v-on:click.prevent.self="logout">Logout</a>
+              </li>
             </ul>
           </aside>
         </div>
@@ -55,16 +58,13 @@ export default {
   name: 'app',
   data () {
     return {
-      isMenuActive: false
     }
   },
   methods: {
-    toggleMenu () {
-      if (this.isMenuActive) {
-        this.isMenuActive = false
-      } else {
-        this.isMenuActive = true
-      }
+    logout () {
+      this.$cookie.delete('importprivkey');
+      this.$cookie.set('address');
+      window.location.reload()
     }
   }
 }
