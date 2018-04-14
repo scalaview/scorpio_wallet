@@ -23,7 +23,10 @@
             </p>
             <ul class="menu-list">
               <li>
-                <router-link to="/">Wallet</router-link>
+                <router-link to="/">Explore</router-link>
+              </li>
+              <li>
+                <router-link to="/wallet">Wallet</router-link>
               </li>
               <li>
                 <router-link to="/transactions">Transactions</router-link>

@@ -30,6 +30,9 @@ export default {
     Vue.prototype.$createTransaction = function(privateKey, receiverAddress, amount){
       return this.$http.post("send_transaction", { address: receiverAddress, amount: amount, privkey: privateKey});
     }
+    Vue.prototype.$blocks = function(){
+      return this.$http.get("blocks");
+    }
   }
 }
 

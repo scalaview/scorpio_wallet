@@ -5,8 +5,8 @@ import App from './App'
 import router from './router'
 import api from './api'
 import VueResource from 'vue-resource'
-var VueCookie = require('vue-cookie');
 
+var VueCookie = require('vue-cookie');
 
 Vue.use(VueResource)
 Vue.use(api)
@@ -14,6 +14,7 @@ Vue.use(VueCookie);
 
 Vue.config.productionTip = false
 Vue.url.options.root = process.env.API_ROOT;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
