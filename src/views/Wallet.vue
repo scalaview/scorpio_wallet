@@ -127,6 +127,9 @@ export default {
       this.$getBalance(this.address).then(function(response) {
         if(response.body.err === 0){
           this.balance = response.body.data.balance
+        }else{
+          this.error = true
+          this.msg = response.body.message
         }
         this.isLoading = false
       }).catch(function(err){
@@ -145,6 +148,9 @@ export default {
       this.$createTransaction(this.importprivkey || this.privkey, this.receiverAddress, parseFloat(this.amount)).then(function(response){
         if(response.body.err === 0){
           $this.msg = "transaction create successfully! tx id: " + response.body.data.id
+        }else{
+          this.error = true
+          $this.msg = response.body.message
         }
         this.isLoading = false
       }).catch(function(err){
@@ -166,6 +172,9 @@ export default {
       this.$getBalance(this.address).then(function(response) {
         if(response.body.err === 0){
           this.balance = response.body.data.balance
+        }else{
+          this.error = true
+          this.msg = response.body.message
         }
         this.isLoading = false
       }).catch(function(err){
@@ -181,6 +190,9 @@ export default {
       this.$getBalance(this.address).then(function(response) {
         if(response.body.err === 0){
           this.balance = response.body.data.balance
+        }else{
+          this.error = true
+          this.msg = response.body.message
         }
       }).catch(function(err){
         console.log(err)

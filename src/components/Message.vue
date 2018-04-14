@@ -25,6 +25,7 @@ export default {
   methods: {
     clearMessage () {
       this.$emit('update:msg', '')
+      this.$emit('update:error', false)
     }
   }
 }

@@ -19,20 +19,17 @@ export default {
       return key.getPublic(true, 'hex')
     }
     Vue.prototype.$getBalance = function(address){
-      return this.$http.get("http://127.0.0.1:5000/balance/"+address)
+      return this.$http.get("balance/"+address)
     }
     Vue.prototype.$getTransactionPool = function(address) {
-      return this.$http.get("http://127.0.0.1:5000/transaction_pool")
+      return this.$http.get("transaction_pool")
     }
     Vue.prototype.$unspentTransactionOutputs = function(address) {
-      return this.$http.get("http://127.0.0.1:5000/address/"+address)
+      return this.$http.get("address/"+address)
     }
     Vue.prototype.$createTransaction = function(privateKey, receiverAddress, amount){
-      return this.$http.post("http://127.0.0.1:5000/send_transaction", { address: receiverAddress, amount: amount, privkey: privateKey});
+      return this.$http.post("send_transaction", { address: receiverAddress, amount: amount, privkey: privateKey});
     }
   }
 }
-
-// pri 2937f6419928952216a77efe5da87893711a6b6a9bd6353f0fd430d4fbb8c292
-// pub 02252899a4bcdbb3d60015372502e56d2b9573624b967535c29c6480cbed68b7d0
 
